@@ -30,13 +30,7 @@ synergy.  Each architecture must implement this interface.
 */
 class IArchString : public IInterface {
 public:
-    IArchString() =default;
-    IArchString(const IArchString &) =delete;
-    IArchString(IArchString &&) =delete;
     virtual ~IArchString();
-
-    IArchString& operator=(const IArchString &) =delete;
-    IArchString& operator=(IArchString &&) =delete;
 
     //! Wide character encodings
     /*!

@@ -40,12 +40,7 @@ public:
                             ISocketFactory*,
                             IEventQueue* events,
                             bool enableCrypto);
-    ClientListener(ClientListener const &) =delete;
-    ClientListener(ClientListener &&) =delete;
     ~ClientListener();
-
-    ClientListener& operator=(ClientListener const &) =delete;
-    ClientListener& operator=(ClientListener &&) =delete;
 
     //! @name manipulators
     //@{

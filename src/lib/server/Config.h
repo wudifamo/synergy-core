@@ -151,8 +151,6 @@ public:
     public:
         explicit const_iterator() : m_i() { }
         explicit const_iterator(const internal_const_iterator& i) : m_i(i) { }
-        const_iterator(const const_iterator &src) =default;
-        ~const_iterator() =default;
 
         const_iterator&    operator=(const const_iterator& i) {
             m_i = i.m_i;

@@ -36,12 +36,7 @@ A socket multiplexer services multiple sockets simultaneously.
 class SocketMultiplexer {
 public:
     SocketMultiplexer();
-    SocketMultiplexer(SocketMultiplexer const &) =delete;
-    SocketMultiplexer(SocketMultiplexer &&) =delete;
     ~SocketMultiplexer();
-
-    SocketMultiplexer& operator=(SocketMultiplexer const &) =delete;
-    SocketMultiplexer& operator=(SocketMultiplexer &&) =delete;
 
     //! @name manipulators
     //@{

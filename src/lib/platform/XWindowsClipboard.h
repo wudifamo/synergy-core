@@ -40,12 +40,7 @@ public:
     clipboard identified by \c id.
     */
     XWindowsClipboard(Display*, Window window, ClipboardID id);
-    XWindowsClipboard(XWindowsClipboard const &) =delete;
-    XWindowsClipboard(XWindowsClipboard &&) =delete;
     virtual ~XWindowsClipboard();
-
-    XWindowsClipboard& operator=(XWindowsClipboard const &) =delete;
-    XWindowsClipboard& operator=(XWindowsClipboard &&) =delete;
 
     //! Notify clipboard was lost
     /*!

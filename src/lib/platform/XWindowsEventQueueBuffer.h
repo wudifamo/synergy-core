@@ -34,12 +34,7 @@ class IEventQueue;
 class XWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
     XWindowsEventQueueBuffer(Display*, Window, IEventQueue* events);
-    XWindowsEventQueueBuffer(XWindowsEventQueueBuffer const &) =delete;
-    XWindowsEventQueueBuffer(XWindowsEventQueueBuffer &&) =delete;
     virtual ~XWindowsEventQueueBuffer();
-
-    XWindowsEventQueueBuffer& operator=(XWindowsEventQueueBuffer const &) =delete;
-    XWindowsEventQueueBuffer& operator=(XWindowsEventQueueBuffer &&) =delete;
 
     // IEventQueueBuffer overrides
     virtual    void        init() { }
