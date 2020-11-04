@@ -138,11 +138,6 @@ public:
         Ignore X11 errors.
         */
         ErrorLock(Display*);
-        ErrorLock(ErrorLock const &) =delete;
-        ErrorLock(ErrorLock &&) =delete;
-
-        ErrorLock& operator=(ErrorLock const &) =delete;
-        ErrorLock& operator=(ErrorLock &&) =delete;
 
         /*!
         Set \c *errorFlag if any error occurs.

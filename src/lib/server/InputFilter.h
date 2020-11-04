@@ -228,12 +228,7 @@ public:
     class KeystrokeAction : public Action {
     public:
         KeystrokeAction(IEventQueue* events, IPlatformScreen::KeyInfo* adoptedInfo, bool press);
-        KeystrokeAction(KeystrokeAction const &) =delete;
-        KeystrokeAction(KeystrokeAction &&) =delete;
         ~KeystrokeAction();
-
-        KeystrokeAction& operator=(KeystrokeAction const &) =delete;
-        KeystrokeAction& operator=(KeystrokeAction &&) =delete;
 
         void                    adoptInfo(IPlatformScreen::KeyInfo*);
         const IPlatformScreen::KeyInfo*
@@ -260,12 +255,7 @@ public:
         MouseButtonAction(IEventQueue* events,
                                     IPlatformScreen::ButtonInfo* adoptedInfo,
                                     bool press);
-        MouseButtonAction(MouseButtonAction const &) =delete;
-        MouseButtonAction(MouseButtonAction &&) =delete;
         ~MouseButtonAction();
-
-        MouseButtonAction& operator=(MouseButtonAction const &) =delete;
-        MouseButtonAction& operator=(MouseButtonAction &&) =delete;
 
         const IPlatformScreen::ButtonInfo*
                                 getInfo() const;

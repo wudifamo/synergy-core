@@ -31,7 +31,6 @@ class IpcServerProxy {
 
 public:
     IpcServerProxy(synergy::IStream& stream, IEventQueue* events);
-    IpcServerProxy(IpcServerProxy const &) =delete;
     virtual ~IpcServerProxy();
 
 private:

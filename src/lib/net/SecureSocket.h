@@ -36,12 +36,7 @@ public:
     SecureSocket(IEventQueue* events,
         SocketMultiplexer* socketMultiplexer,
         ArchSocket socket);
-    SecureSocket(SecureSocket const &) =delete;
-    SecureSocket(SecureSocket &&) =delete;
     ~SecureSocket();
-
-    SecureSocket& operator=(SecureSocket const &) =delete;
-    SecureSocket& operator=(SecureSocket &&) =delete;
 
     // ISocket overrides
     void                close();

@@ -42,12 +42,7 @@ class Log {
 public:
     Log();
     Log(Log* src);
-    Log(Log const &) =delete;
-    Log(Log &&) =delete;
     ~Log();
-
-    Log& operator=(Log const &) =delete;
-    Log& operator=(Log &&) =delete;
 
     //! @name manipulators
     //@{
@@ -159,7 +154,7 @@ not be filtered and is never prefixed by the filename and line number.
 
 If \c NOLOGGING is defined during the build then this macro expands to
 nothing.  If \c NDEBUG is defined during the build then it expands to a
-call to Log::print.  Otherwise it expands to a call to Log::print,
+call to Log::print.  Otherwise it expands to a call to Log::printt,
 which includes the filename and line number.
 */
 
