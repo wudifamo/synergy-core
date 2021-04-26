@@ -47,9 +47,9 @@ steps:
       mkdir build64
       cd build64
       IF "$(buildType)"=="enterprise" (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
       ) else (
-          cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+          cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
       )
     displayName: 'Cmake x64 Standard'
     env:
@@ -75,9 +75,9 @@ steps:
       mkdir build32
       cd build32
       IF "$(buildType)"=="enterprise" (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% -DSYNERGY_ENTERPRISE=ON ..
       ) else (
-         cmake -G "Visual Studio 16 2019" -A %MSARCH% -V -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
+         cmake -G "Visual Studio 16 2019" -A %MSARCH% -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=%QT_PATH% ..
       )
     displayName: 'Cmake x32 Standard'
     env:
