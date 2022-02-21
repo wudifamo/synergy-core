@@ -1,4 +1,4 @@
-v1.14.3-rc
+v1.14.3-stable
 ===========
 Bug fixes:
 - #7135 Fix issue with function keys on macOS
