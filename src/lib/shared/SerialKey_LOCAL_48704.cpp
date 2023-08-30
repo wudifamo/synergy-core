@@ -74,8 +74,7 @@ SerialKey::isExpired(time_t currentTime) const
 bool
 SerialKey::isTrial() const
 {
-//    return m_KeyType.isTrial();
-    return false;
+    return m_data.keyType.isTrial();
 }
 
 bool
@@ -95,10 +94,10 @@ SerialKey::isValid() const
 {
     bool Valid = true;
 
-//    if (!m_data.edition.isValid() || isExpired(::time(nullptr)))
-//    {
-//        Valid = false;
-//    }
+    if (!m_data.edition.isValid() || isExpired(::time(nullptr)))
+    {
+        Valid = false;
+    }
 
     return Valid;
 }
