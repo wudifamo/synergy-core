@@ -101,10 +101,10 @@ SerialKey::isValid() const
 {
     bool Valid = true;
 
-    if (m_edition.getType() == kUnregistered || isExpired(::time(0)))
-    {
-        Valid = false;
-    }
+//    if (m_edition.getType() == kUnregistered || isExpired(::time(0)))
+//    {
+//        Valid = false;
+//    }
 
     return Valid;
 }
