@@ -67,7 +67,7 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   }
 
   // install event handlers
-  m_events->addHandler(EventTypes::Timer, this, [this](const auto &) { handleSwitchWaitTimeout(); });
+  m_events->addHandler(EventTypes::Timer, this, [this](const auto &e) { handleTimer(e); });
   m_events->addHandler(EventTypes::KeyStateKeyDown, m_inputFilter, [this](const auto &e) { handleKeyDownEvent(e); });
   m_events->addHandler(EventTypes::KeyStateKeyUp, m_inputFilter, [this](const auto &e) { handleKeyUpEvent(e); });
   m_events->addHandler(EventTypes::KeyStateKeyRepeat, m_inputFilter, [this](const auto &e) {
@@ -158,6 +158,10 @@ Server::~Server()
   m_events->removeHandler(PrimaryScreenFakeInputBegin, m_inputFilter);
   m_events->removeHandler(PrimaryScreenFakeInputEnd, m_inputFilter);
   m_events->removeHandler(Timer, this);
+  if (m_clipboardSyncTimer != nullptr) {
+    m_events->deleteTimer(m_clipboardSyncTimer);
+    m_clipboardSyncTimer = nullptr;
+  }
   stopSwitch();
 
   try {
@@ -446,15 +450,14 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
       return;
     }
 
-    // update the primary client's clipboards if we're leaving the
-    // primary screen.
-    if (m_active == m_primaryClient && m_enableClipboard) {
-      for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        const ClipboardInfo &clipboard = m_clipboards[id];
-        if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
-          onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
-        }
-      }
+    // Grabbing the primary clipboard here used to run inline, before enter().
+    // A screenshot is several megabytes and the copy blocks this thread; the
+    // mouse sample that arrives afterwards is applied while the pointer is
+    // still on the destination edge and the switch reverses. Read it on the
+    // next turn, after the pointer has actually entered.
+    const bool deferPrimaryClipboard = (m_active == m_primaryClient);
+    if (deferPrimaryClipboard) {
+      schedulePrimaryClipboardSync();
     }
 
 #if defined(__APPLE__)
@@ -479,8 +482,13 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     m_active->enter(x, y, m_seqNum, m_primaryClient->getToggleMask(), forScreensaver);
 
     if (m_enableClipboard) {
-      // send the clipboard data to new active screen
+      // send the clipboard data to new active screen. primary-owned data is
+      // sent by the deferred sync scheduled above; marshalling it here would
+      // block the edge cross again.
       for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+        if (deferPrimaryClipboard && m_clipboards[id].m_clipboardOwner == getName(m_primaryClient)) {
+          continue;
+        }
         // Hackity hackity hack
         if (m_clipboards[id].m_clipboard.marshall().size() > (m_maximumClipboardSize * 1024)) {
           continue;
@@ -1182,6 +1190,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
     clipboard.m_clipboard.close();
   }
   clipboard.m_clipboardData = clipboard.m_clipboard.marshall();
+  clipboard.m_clipboardCaptured = false;
 
   // tell all other screens to take ownership of clipboard.  tell the
   // grabber that it's clipboard isn't dirty.
@@ -1258,6 +1267,45 @@ void Server::handleWheelEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::WheelInfo *>(event.getData());
   onMouseWheel(info->m_xDelta, info->m_yDelta);
+}
+
+void Server::handleTimer(const Event &event)
+{
+  const auto *info = static_cast<const IEventQueue::TimerEvent *>(event.getData());
+  if (info != nullptr && info->m_timer != nullptr && info->m_timer == m_clipboardSyncTimer) {
+    auto *timer = m_clipboardSyncTimer;
+    m_clipboardSyncTimer = nullptr;
+    m_events->deleteTimer(timer);
+    syncPrimaryClipboard();
+    return;
+  }
+
+  handleSwitchWaitTimeout();
+}
+
+void Server::schedulePrimaryClipboardSync()
+{
+  if (!m_enableClipboard || m_primaryClient == nullptr || m_clipboardSyncTimer != nullptr) {
+    return;
+  }
+
+  // Long enough to return to the event loop and apply the enter, short
+  // enough that the clipboard still arrives as part of the switch.
+  m_clipboardSyncTimer = m_events->newOneShotTimer(0.001, this);
+}
+
+void Server::syncPrimaryClipboard()
+{
+  if (!m_enableClipboard || m_primaryClient == nullptr) {
+    return;
+  }
+
+  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+    const ClipboardInfo &clipboard = m_clipboards[id];
+    if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
+      onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
+    }
+  }
 }
 
 void Server::handleSwitchWaitTimeout()
@@ -1437,8 +1485,18 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
   // should be the expected client
   assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
 
+  // This sequence was already read (possibly an over-limit image we refused
+  // to send). Reading it again blocks the input thread on every edge cross.
+  if (clipboard.m_clipboardCaptured && seqNum == clipboard.m_clipboardSeqNum) {
+    if (m_active != nullptr && clipboard.m_clipboard.marshall().size() <= m_maximumClipboardSize * 1024) {
+      m_active->setClipboard(id, &clipboard.m_clipboard);
+    }
+    return;
+  }
+
   // get data
   sender->getClipboard(id, &clipboard.m_clipboard);
+  clipboard.m_clipboardCaptured = true;
 
   std::string data = clipboard.m_clipboard.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {

@@ -315,7 +315,10 @@ private:
   void handleMotionPrimaryEvent(const Event &event);
   void handleMotionSecondaryEvent(const Event &event);
   void handleWheelEvent(const Event &event);
+  void handleTimer(const Event &event);
   void handleSwitchWaitTimeout();
+  void schedulePrimaryClipboardSync();
+  void syncPrimaryClipboard();
   void handleClientDisconnected(BaseClientProxy *client);
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToScreenEvent(const Event &event);
@@ -370,6 +373,10 @@ private:
     std::string m_clipboardData;
     std::string m_clipboardOwner;
     uint32_t m_clipboardSeqNum = 0;
+    // True once this sequence has been read from the owner. Leaving the
+    // screen must not re-read an unchanged image; that copy blocks the
+    // thread and the resulting mouse sample bounces off the entry edge.
+    bool m_clipboardCaptured = false;
   };
   // Order suggested by clang
 
@@ -391,6 +398,7 @@ private:
   BaseClientProxy *m_switchScreen = nullptr;
   double m_switchWaitDelay = 0.0;
   EventQueueTimer *m_switchWaitTimer = nullptr;
+  EventQueueTimer *m_clipboardSyncTimer = nullptr;
 
   // delay for double-tap screen switching
   double m_switchTwoTapDelay = 0.0;

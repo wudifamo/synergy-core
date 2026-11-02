@@ -524,8 +524,18 @@ void MSWindowsScreen::warpCursor(int32_t x, int32_t y)
     // do nothing
   }
 
-  // save position to compute delta of next motion
-  saveMousePosition(x, y);
+  // SetCursorPos on a high-DPI display often lands a few pixels off the
+  // requested point. A large clipboard image is read on the leave path and
+  // blocks this thread long enough for that late sample to arrive after the
+  // flush above. Record where the cursor actually is, otherwise the sample
+  // is forwarded as a real delta and, because the other screen is entered on
+  // its edge pixel, the pointer walks straight back.
+  POINT actual = {x, y};
+  if (!getThisCursorPos(&actual)) {
+    actual.x = x;
+    actual.y = y;
+  }
+  saveMousePosition(actual.x, actual.y);
 }
 
 void MSWindowsScreen::saveMousePosition(int32_t x, int32_t y)
@@ -1262,6 +1272,11 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
         -y + bogusZoneSize > m_yCenter - m_y || y + bogusZoneSize > m_y + m_h - m_yCenter) {
 
       LOG_DEBUG("dropped bogus delta motion: %+d,%+d", x, y);
+      // saveMousePosition() above stored the stale pre-warp sample. The cursor
+      // is at the center; keep the baseline there so the next small move is
+      // not measured from the screen edge (that walks back off the screen we
+      // just entered).
+      saveMousePosition(m_xCenter, m_yCenter);
     } else {
       // send motion
       sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(x, y));
