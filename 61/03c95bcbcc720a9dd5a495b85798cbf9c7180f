@@ -1,0 +1,47 @@
+src/lib/server/Config.cpp
+  s_fef5bddd05a283::t_bfbcc433b1f01f 1063,1066-1067
+  s_fef5bddd05a283::t_d6d70b1744ea85 1068
+.codebuddy/memory/2026-08-24.md
+  s_fef5bddd05a283::t_e2a78a7f5ab322 7
+  s_fef5bddd05a283::t_f17819269f3c0f 1-5
+  s_fef5bddd05a283::t_f5b73baabe453e 6
+src/lib/gui/core/CoreProcess.cpp
+  s_fef5bddd05a283::t_3ecc1cfb6fb0b5 393
+src/lib/server/Server.cpp
+  s_fef5bddd05a283::t_ce8493a5a99ad2 1110
+src/lib/deskflow/ClipboardChunk.h
+  s_fef5bddd05a283::t_63210bc5982b6c 26
+.codebuddy/memory/MEMORY.md
+  s_fef5bddd05a283::t_4dc791da8bf9a2 8
+  s_fef5bddd05a283::t_3c35844241d736 1-5,7
+  s_fef5bddd05a283::t_c5161a91aa553a 6
+src/lib/deskflow/ClipboardChunk.cpp
+  s_fef5bddd05a283::t_bae09dfa7a04b4 115,118-122,134-137,156-158
+  s_fef5bddd05a283::t_aa91236d38dad9 159-160
+src/unittests/deskflow/ClipboardChunksTests.cpp
+  s_fef5bddd05a283::t_95a1ad1d111689 272,276-281,288-289,291-295,297-302
+src/lib/client/Client.cpp
+  s_fef5bddd05a283::t_0175377d7bec14 31-32
+  s_fef5bddd05a283::t_185c6b1401cf53 346-356
+src/unittests/deskflow/ClipboardChunksTests.h
+  s_fef5bddd05a283::t_1f98677d04a140 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.32",
+  "base_commit_sha": "6103c95bcbcc720a9dd5a495b85798cbf9c7180f",
+  "prompts": {},
+  "sessions": {
+    "s_fef5bddd05a283": {
+      "agent_id": {
+        "tool": "codebuddy",
+        "id": "c61447c53fe242c981780b53e1fd963a",
+        "model": "custom-local:grok-4.6"
+      },
+      "human_author": "kangzhenqi <kangzhenqi@sdpjw.com>",
+      "custom_attributes": {
+        "internal_commit_event_allowlist": "codeup.aliyun.com,codeup-*,key_*"
+      }
+    }
+  }
+}
