@@ -23,6 +23,7 @@ struct ClipboardChunkAssemblyState
 {
   size_t expectedSize = 0;
   bool active = false;
+  bool skipping = false;
 };
 
 class ClipboardChunk : public Chunk

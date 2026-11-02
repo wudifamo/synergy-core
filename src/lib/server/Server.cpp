@@ -1107,6 +1107,7 @@ void Server::processOptions()
         );
       } else {
         m_maximumClipboardSize = static_cast<size_t>(value);
+        LOG_INFO("clipboard size limit is %zu MB", m_maximumClipboardSize / 1024);
       }
     }
   }

@@ -28,6 +28,8 @@
 #include "net/SecureSocket.h"
 #include "net/TCPSocket.h"
 
+#include <algorithm>
+
 #include <QMetaEnum>
 
 #include <cstdlib>
@@ -341,7 +343,17 @@ void Client::setOptions(const OptionsList &options)
     } else if (id == kOptionClipboardSharingSize) {
       index++;
       if (index != options.end()) {
-        m_maximumClipboardSize = *index;
+        m_maximumClipboardSize = static_cast<size_t>(*index);
+        // Server advertises the limit in KB. Apply it to receive as well so the
+        // server's configured clipboard size is honored on the client.
+        // Cap at the UI maximum (10000 MB) to mitigate clipboard bombs.
+        static constexpr size_t kMaxClipboardBytes = 10000ull * 1024 * 1024;
+        const auto serverBytes = m_maximumClipboardSize * 1024;
+        m_maximumClipboardReceiveSize = std::min(kMaxClipboardBytes, serverBytes);
+        LOG_DEBUG(
+            "clipboard receive limit set to %zu bytes (%zu KB from server)", m_maximumClipboardReceiveSize,
+            m_maximumClipboardSize
+        );
       }
     } else if (id == kOptionRelativeMouseMoves) {
       index++;

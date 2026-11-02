@@ -112,11 +112,14 @@ TransferState ClipboardChunk::assemble(
     clearCachedData(dataCached);
     state.expectedSize = static_cast<size_t>(expected);
     state.active = true;
+    state.skipping = false;
 
     if (state.expectedSize > maxDataSize) {
-      LOG_ERR("clipboard size exceeds limit, size: %zu, limit: %zu", state.expectedSize, maxDataSize);
-      reset();
-      return Error;
+      LOG_WARN(
+          "clipboard size exceeds limit, size: %zu, limit: %zu; ignoring clipboard", state.expectedSize, maxDataSize
+      );
+      state.skipping = true;
+      return InProgress;
     }
 
     LOG_DEBUG("start receiving clipboard data, expected size=%zu", state.expectedSize);
@@ -126,6 +129,10 @@ TransferState ClipboardChunk::assemble(
       LOG_ERR("clipboard data chunk before start");
       reset();
       return Error;
+    }
+
+    if (state.skipping) {
+      return InProgress;
     }
 
     if (wouldExceed(dataCached.size(), data.size(), state.expectedSize)) {
@@ -144,6 +151,11 @@ TransferState ClipboardChunk::assemble(
       LOG_ERR("clipboard end chunk before start");
       reset();
       return Error;
+    }
+
+    if (state.skipping) {
+      reset();
+      return InProgress;
     }
 
     state.active = false;

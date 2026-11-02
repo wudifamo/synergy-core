@@ -390,7 +390,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     );
   }
 
-  QStringList args = {coreMode};
+  QStringList args = {coreMode, QStringLiteral("--settings"), Settings::settingsFile()};
 
   if (m_mode == Settings::CoreMode::Server) {
     const auto [hasNeededPermissions, configFilename] = persistServerConfig();
