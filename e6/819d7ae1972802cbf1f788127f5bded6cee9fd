@@ -1,0 +1,38 @@
+src/lib/platform/MSWindowsScreen.cpp
+  s_742f9bfe7beead::t_fd8b651987ae20 534
+  s_742f9bfe7beead::t_888cbb8b5be07a 1275-1279
+  s_742f9bfe7beead::t_36a49c5deb9c83 527-533,535-538
+src/lib/server/Server.h
+  s_742f9bfe7beead::t_8a8899dfcdd73f 401
+  s_742f9bfe7beead::t_4ec3a839f16a9a 318,320-321
+  s_742f9bfe7beead::t_4acb81092fe21c 376-379
+src/lib/server/Server.cpp
+  s_742f9bfe7beead::t_8a42b58d582c93 485-487,489-491
+  s_742f9bfe7beead::t_76ab0d3eb5a3f4 70
+  s_742f9bfe7beead::t_fe9929e1dc2348 453-457,460
+  s_742f9bfe7beead::t_bf405172d67a44 1488-1490,1494-1496,1499
+  s_742f9bfe7beead::t_ef575a4e59d69c 161-164
+  s_742f9bfe7beead::t_a9806a459bb3b3 458-459
+  s_742f9bfe7beead::t_c0eaba7857a213 1193
+  s_742f9bfe7beead::t_445195e8c2c916 1272-1310
+  s_742f9bfe7beead::t_514e933d81bc4a 1491-1493
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.32",
+  "base_commit_sha": "e6819d7ae1972802cbf1f788127f5bded6cee9fd",
+  "prompts": {},
+  "sessions": {
+    "s_742f9bfe7beead": {
+      "agent_id": {
+        "tool": "codebuddy",
+        "id": "5af23b78c1c6480c89afe018d6c2e2b1",
+        "model": "custom-local:grok-4.7"
+      },
+      "human_author": "kangzhenqi <kangzhenqi@sdpjw.com>",
+      "custom_attributes": {
+        "internal_commit_event_allowlist": "codeup.aliyun.com,codeup-*,key_*"
+      }
+    }
+  }
+}
